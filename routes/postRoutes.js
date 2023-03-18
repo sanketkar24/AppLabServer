@@ -19,7 +19,7 @@ router.route("/startupDetails").get(postController.getStartup);
 
 //Services
 router.route("/getPastServices").get(postController.getPastServices);
-router.route("/insertServices").get(postController.insertServices);
+router.route("/insertServices").post(postController.insertServices);
 router.route("/getAllServices").get(postController.getAllServices);
 
 //Hiring
