@@ -132,6 +132,30 @@ class Post {
         let sql = `select * from startup where startup_id = ${startup_id};`;
         return db.execute(sql);
     }
+
+    static findCofounder(student_id) {
+        let sql = `select * from UserProfile where interested_in = 1 and student_id != '${student_id}';`;
+        return db.execute(sql);
+    }
+
+
+    //GET MOVIE INFO BY WORK ID
+    static async listMentors() {
+        let query = `select * from MentorDetails`;
+        return db.query(query).then(([result]) => {
+            const returnResult = {
+                mentors: result
+            }
+            return returnResult;
+        }).catch(error => {
+            throw error;
+        })
+    }
+
+    static findStartup(startup_id) {
+        let sql = `select * from startup where startup_id = ${startup_id};`;
+        return db.execute(sql);
+    }
     //GET MOVIE INFO BY WORK ID
     static async listMentors() {
         let query = `select * from MentorDetails`;
@@ -208,6 +232,35 @@ class Post {
         let sql = `select * from Hiring_Post where startup_id='${startup_id}';`;
         return db.execute(sql);
     }
+
+    static getApplicantList(startup_id,req) {
+        console.log('startup_id: '+startup_id)
+        let sql = `select t1.* from Apply t1 left join Hiring_Post t2 on t1.post_id = t2.post_id where t1.post_id='${req.body.post_id}' and t2.startup_id = '${startup_id}';`;
+        return db.execute(sql);
+    }
+
+    static applyJob(student_id, req) {
+        let sql = `select count(*) as count from Apply where post_id = '${req.body.post_id}' and student_id = '${student_id}'`;
+        return db.query(sql).then(async ([row]) => {
+            console.log(row[0].count)
+            if (row[0].count !== 0) {
+                //  REGISTERATION NOT POSSIBLE
+                return 'failed'
+            }
+            else {
+                // INSERT into TABLE
+                let ins = `insert into Apply(student_id, post_id) values('${student_id}','${req.body.post_id}')`;
+                return db.query(ins).then(([row]) => {
+                    return 'success'
+                }).catch(error => {
+                    throw error;
+                })
+            }
+        }).catch(error => {
+            throw error;
+        })
+    }
+    
 
 
     static insertServices(startup_id, req) {

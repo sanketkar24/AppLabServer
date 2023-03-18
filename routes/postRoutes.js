@@ -26,6 +26,8 @@ router.route("/getAllServices").get(postController.getAllServices);
 router.route("/insertHiringMessage").post(postController.insertHiring);
 router.route("/getPastHiring").post(postController.getPastHiring);
 router.route("/getAllHiring").get(postController.getAllHiring);
+router.route("/applyJob").post(postController.applyJob)
+router.route("/applicantList").post(postController.applicantList)
 
 //Feedback
 router.route("/getFeedback").get(postController.getFeedback);
@@ -35,6 +37,12 @@ router.post("/reset",checkToken,postController.reset);
 router.route("/findStartup").post(postController.findStartupByID)
 router.route("/listMentors").get(postController.listMentors)
 router.route("/insertUpdateMsg").get(postController.insertUpdateMsg)
+
+//Cofounder
+router.route("/findCofounder").get(postController.findCofounder)
+
+
+//Apply to job
 
 
 

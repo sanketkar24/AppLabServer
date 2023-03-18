@@ -89,6 +89,9 @@ exports.findStartupByID = async (req, res, next) => {
         next(error);
     }
 }
+
+
+
 exports.listMentors = async (req, res, next) => {
     try {
         let val = await Post.listMentors();
@@ -283,6 +286,114 @@ exports.getPastHiring = async (req, res, next) => {
 
                     console.log(val);
                     let [pastHiring,abc] = await Post.getPastHiring(val[0].startup_id)
+                    res.json({pastHiring})
+
+                }
+            })
+        } else {
+            res.json({
+                success: 0,
+                message: "access denied! Unauthorized user!"
+            })
+        }
+    } catch (error) {
+        console.log(error);
+        next(error);
+    }
+}
+
+
+exports.applicantList = async (req, res, next) => {
+    try {
+        let token = req.get("authorization");
+        if (token) {
+            token = token.slice(7)
+            jwt.verify(token, process.env.ACCESS_KEY, async (err, decoded) => {
+                if (err) {
+                    res.json({
+                        success: 0,
+                        message: "Invalid token"
+                    });
+                }
+                else {
+                    let [val,_] = await Post.getStartupUserInfo(decoded.result.username, decoded.result.password)
+                    // res.json({val})
+
+                    console.log(val);
+                    let [result,abc] = await Post.getApplicantList(val[0].startup_id, req)
+                    console.log(result)
+                    res.json(result)
+
+                }
+            })
+        } else {
+
+            res.json({
+                success: 0,
+                message: "access denied! Unauthorized user!"
+            })
+        }
+    } catch (error) {
+        console.log(error);
+        next(error);
+    }
+}
+ 
+exports.applyJob = async (req, res, next) => {
+    try {
+        let token = req.get("authorization");
+        if (token) {
+            token = token.slice(7)
+            jwt.verify(token, process.env.ACCESS_KEY, async (err, decoded) => {
+                if (err) {
+                    res.json({
+                        success: 0,
+                        message: "Invalid token"
+                    });
+                }
+                else {
+                    let [val,_] = await Post.getUserInfo(decoded.result.username, decoded.result.password)
+                    // res.json({val})
+
+                    console.log(val);
+                    let result = await Post.applyJob(val[0].student_id, req)
+                    
+                    res.json(result)
+
+                }
+            })
+        } else {
+            res.json({
+                success: 0,
+                message: "access denied! Unauthorized user!"
+            })
+        }
+    } catch (error) {
+        console.log(error);
+        next(error);
+    }
+}
+
+
+exports.findCofounder = async (req, res, next) => {
+    try {
+        let token = req.get("authorization");
+        if (token) {
+            token = token.slice(7)
+            jwt.verify(token, process.env.ACCESS_KEY, async (err, decoded) => {
+                if (err) {
+                    res.json({
+                        success: 0,
+                        message: "Invalid token"
+                    });
+                }
+                else {
+                    let [val,_] = await Post.getUserInfo(decoded.result.username, decoded.result.password)
+                    // res.json({val})
+
+                    console.log(val);
+                    let [pastHiring,abc] = await Post.findCofounder(val[0].student_id)
+                    console.log(pastHiring)
                     res.json({pastHiring})
 
                 }
