@@ -159,12 +159,16 @@ class Post {
         let sql = `SELECT * from REVIEW WHERE movie_id ='${id}';`;
         return db.execute(sql);
     }
-    static insertHiringMessage(req) {
-        let startup_id = `select startup_id from Startup_name where startup_name = '${req.startup_id}'`
-        let [results, _] = db.execute(startup_id);
-        let obj = [results.startup_id, req.role, req.description, req.dept]
-        let sql =  `insert into Hiring_Post(startup_id, role,description, dept) values (?,?,?,?)`;
-        return db.execute(sql,obj);
+    static insertHiring(startup_id, req) {
+        let sql = `insert into Hiring_Post(startup_id, role, description, dept) values('${startup_id}',
+        '${req.body.role}','${req.body.description}','${req.body.dept}');`;
+        //return db.execute(sql);
+        return db.execute(sql).then(async ([res]) => {
+            console.log(res)
+            return res.affectedRows>=1 ? 'success':'false'
+        }).catch(error => {
+            throw error;
+        })
     }
     static getPopMovie() {
         let sql = `SELECT * FROM MovieDB;`;

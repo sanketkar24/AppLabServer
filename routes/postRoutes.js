@@ -23,7 +23,7 @@ router.route("/insertServices").get(postController.insertServices);
 router.route("/getAllServices").get(postController.getAllServices);
 
 //Hiring
-router.route("/insertHiringMessage").post(postController.insertHiringMessage);
+router.route("/insertHiringMessage").post(postController.insertHiring);
 router.route("/getPastHiring").post(postController.getPastHiring);
 router.route("/getAllHiring").get(postController.getAllHiring);
 
