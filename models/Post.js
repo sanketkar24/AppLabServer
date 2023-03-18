@@ -198,7 +198,8 @@ class Post {
 
     static getFeedback(startup_id) {
         console.log('startup_id: '+startup_id)
-        let sql = `select feedback.*,UserProfile.name,UserProfile.photo from feedback left join UserProfile where startup_id='${startup_id}';`;
+        let sql = `select feedback.*,UserProfile.name,UserProfile.photo from feedback left join UserProfile
+        on feedback.student_id = UserProfile.student_id where feedback.startup_id='${startup_id}';`;
         return db.execute(sql);
     }
 
