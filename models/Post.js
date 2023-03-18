@@ -249,7 +249,7 @@ class Post {
             }
             else {
                 // INSERT into TABLE
-                let ins = `insert into Apply(student_id, post_id) values('${student_id}','${req.body.post_id}')`;
+                let ins = `insert into Apply(student_id, post_id, description,cv_link) values('${student_id}','${req.body.post_id}','${req.body.description}','${req.body.cv_link}')`;
                 return db.query(ins).then(([row]) => {
                     return 'success'
                 }).catch(error => {
