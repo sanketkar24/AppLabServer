@@ -91,9 +91,10 @@ exports.findStartupByID = async (req, res, next) => {
 }
 exports.listMentors = async (req, res, next) => {
     try {
-        let param = req.params.key;
-        Post.listMentors(param);
-        res.status(200).json({ message: "sent" });
+        let val = await Post.listMentors();
+        console.log(val);
+        let result = val.mentors
+        res.status(200).json(result);
     } catch (error) {
         console.log(error);
         next(error);
@@ -198,7 +199,7 @@ exports.getUser = async (req, res, next) => {
     }
 }
 
-exports.getStartup = async (req, res, next) => {
+exports.    getStartup = async (req, res, next) => {
     try {
         let token = req.get("authorization");
         if (token) {

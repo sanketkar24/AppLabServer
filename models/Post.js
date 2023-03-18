@@ -133,15 +133,13 @@ class Post {
         return db.execute(sql);
     }
     //GET MOVIE INFO BY WORK ID
-    static listMentors() {
+    static async listMentors() {
         let query = `select * from MentorDetails`;
-        let par = [param]
-        db.query(query, par).then(([result]) => {
+        return db.query(query).then(([result]) => {
             const returnResult = {
-                description: row,
                 mentors: result
             }
-            console.log(returnResult)
+            return returnResult;
         }).catch(error => {
             throw error;
         })
