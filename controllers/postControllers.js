@@ -6,7 +6,7 @@ exports.regUser = async (req, res, next) => {
     try {
         let obj = req.body;
         console.log(obj)
-        let val = await Post.register(obj.name, obj.username, obj.password, obj.college, obj.gender, obj.year, obj.branch, obj.interested_in, obj.sector );
+        let val = await Post.register(obj.name, obj.username, obj.password, obj.college, obj.email, obj.year, obj.interested_in );
         if (val != 1) val = 0;
         return res.json({
             success: val
@@ -105,22 +105,11 @@ exports.getReview = async (req, res, next) => {
         next(error);
     }
 }
-exports.insertToTable = async (req, res, next) => {
+exports.insertHiringMessage = async (req, res, next) => {
     try {
-        let obj = req.body;
-        obj = obj.results;
-        for (var ele of obj) {
-            if (ele.adult == true)
-                ele["adult"] = 1;
-            else
-                ele["adult"] = 0;
-            if (ele.video == true)
-                ele["video"] = 1;
-            else
-                ele["video"] = 0;
-            Post.insertTo(ele)
-        }
-        res.status(200).json(obj);
+         console.log('inserting hiring message')
+         let [results, _] = await Post.insertHiringMessage(req)
+        res.status(200).json(results);
     } catch (error) {
         console.log(error);
         next(error);
@@ -183,10 +172,11 @@ exports.getUser = async (req, res, next) => {
         next(error);
     }
 }
-exports.postReview = async (req, res, next) => {
+exports.registerStartup = async (req, res, next) => {
     try {
-        let [results, _] = await Post.postReview(req.body.username, req.body.review, req.body.score, req.body.movie_id)
-        res.status(200).json({ results });
+        let val = await Post.registerStartup(req)
+        let msg = val == 1? 'success':'failed'
+        res.status(200).json({ msg });
     } catch (error) {
         console.log(error);
         next(error);

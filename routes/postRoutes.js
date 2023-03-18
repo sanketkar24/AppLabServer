@@ -11,10 +11,13 @@ router.post("/reset",checkToken,postController.reset);
 router.route("/findStartup").post(postController.findStartupByID)
 router.route("/listMentors/:key").post(postController.listMentors)
 router.route("/insertUpdateMsg").get(postController.insertUpdateMsg)
+router.route("/registerStartup").post(postController.registerStartup);
+router.route("/insertHiringMessage").post(postController.insertHiringMessage);
+
 // router.route("/allMovies/:name").get(postController.findMovieByName);
 // router.route("/getReview/:id").get(postController.getReview);
-// router.route("/postReview").post(postController.postReview);
-// router.route("/insert").post(postController.insertToTable);
+
+
 // router.route("/getpopular").get(postController.getPop);
 // router.route("/details/:id").get(postController.getById);
 // router.route("/:genre").get(postController.getByGenre);

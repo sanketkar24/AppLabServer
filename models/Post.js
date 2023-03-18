@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 require("dotenv").config();
 class Post {
-    static register(name, username, password, college, gender, year, branch, interested_in, sector) {
+    static register(name, username, password, college, email, year, interested_in) {
         let sql = `SELECT COUNT(username) as count FROM UserProfile WHERE username = '${username}';`;
         return db.query(sql).then(async ([row]) => {
             console.log(row[0].count)
@@ -16,14 +16,14 @@ class Post {
                 // INSERT into TABLE
                 const hashedPassword = await bcrypt.hash(password, 10)
                 console.log(hashedPassword)
-                let ins = `INSERT INTO UserProfile(username, password, name, gender, college, year, branch, interested_in, sector) values(?,?,?,?,?,?,?,?,?);`;
-                let res = [username, hashedPassword, name, gender, college, year, branch, interested_in, sector];
+                let ins = `INSERT INTO UserProfile(username, password, name, email, college, year, interested_in) values(?,?,?,?,?,?,?);`;
+                let interest_in = interested_in == 'true' ? 1:0;
+                let res = [username, hashedPassword, name, email, college, year, interest_in];
                 return db.query(ins, res).then(([row]) => {
                     return 1
                 }).catch(error => {
                     throw error;
                 })
-
             }
         }).catch(error => {
             throw error;
@@ -131,11 +131,12 @@ class Post {
         let sql = `SELECT * from REVIEW WHERE movie_id ='${id}';`;
         return db.execute(sql);
     }
-    static insertTo(obj) {
-        console.log(obj)
-        let sql = `INSERT INTO MOVIEDB(adult,backdrop_path, id, original_language, original_title, overview, poster_path, release_date, title, video)
-        values(${obj.adult}, '${obj.backdrop_path}', ${obj.id}, '${obj.original_language}', '${obj.original_title}', '${obj.overview}', '${obj.poster_path}', '${obj.release_date}', '${obj.title}', ${obj.video});`;
-        return db.execute(sql);
+    static insertHiringMessage(req) {
+        let startup_id = `select startup_id from Startup_name where startup_name = '${req.startup_id}'`
+        let [results, _] = db.execute(startup_id);
+        let obj = [results.startup_id, req.role, req.description, req.dept]
+        let sql =  `insert into Hiring_Post(startup_id, role,description, dept) values (?,?,?,?)`;
+        return db.execute(sql,obj);
     }
     static getPopMovie() {
         let sql = `SELECT * FROM MovieDB;`;
@@ -153,11 +154,34 @@ class Post {
         let sql = `select * from UserProfile where username='${username}';`;
         return db.execute(sql);
     }
-    static postReview(username, review, score, movie_id) {
-        if (score == '') score = 0;
-        let sql = `insert into Review(username, review, submitdate, movie_id, score) values('${username}','${review}',curdate(),${movie_id},${score});`;
+    static registerStartup(req_obj) {
+        var req = req_obj.body;
+        console.log(req)
+        let sql = `SELECT COUNT(username) as count FROM startup WHERE username = '${req.username}';`;
+        return db.query(sql).then(async ([row]) => {
+            console.log(row[0].count)
+            if (row[0].count != 0) {
+                //  REGISTERATION NOT POSSIBLE
+                console.log("NOT UNIQUE USERNAME")
+            }
+            else {
+                // INSERT into TABLE
 
-        return db.execute(sql);
+                console.log(req.password)
+                const hashedPassword = await bcrypt.hash(req.password, 10)
+                console.log(hashedPassword)
+                let ins = `INSERT INTO startup(username, password, name, description, logo, level, website, sector, email) values(?,?,?,?,?,?,?,?,?);`;
+                let res = [req.username, hashedPassword, req.name, req.description, req.logo, req.level, req.website, req.sector, req.email];
+                return db.query(ins, res).then(([row]) => {
+                    return 1
+                }).catch(error => {
+                    throw error;
+                })
+
+            }
+        }).catch(error => {
+            throw error;
+        })
     }
     static getCount(movie_id) {
         let sql = `select getReviews(${movie_id}) as output`;
