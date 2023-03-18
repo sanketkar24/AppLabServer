@@ -133,8 +133,8 @@ class Post {
         return db.execute(sql);
     }
     //GET MOVIE INFO BY WORK ID
-    static listMentors(param) {
-        let query = `select * from MentorDetails where mentor_id like '?'`;
+    static listMentors() {
+        let query = `select * from MentorDetails`;
         let par = [param]
         db.query(query, par).then(([result]) => {
             const returnResult = {

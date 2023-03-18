@@ -33,7 +33,7 @@ router.route("/getFeedback").get(postController.getFeedback);
 
 router.post("/reset",checkToken,postController.reset);
 router.route("/findStartup").post(postController.findStartupByID)
-router.route("/listMentors/:key").post(postController.listMentors)
+router.route("/listMentors").post(postController.listMentors)
 router.route("/insertUpdateMsg").get(postController.insertUpdateMsg)
 
 
