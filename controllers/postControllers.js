@@ -303,6 +303,43 @@ exports.getPastHiring = async (req, res, next) => {
 }
 
 
+exports.getStartupUpdates = async (req, res, next) => {
+    try {
+        let token = req.get("authorization");
+        if (token) {
+            token = token.slice(7)
+            jwt.verify(token, process.env.ACCESS_KEY, async (err, decoded) => {
+                if (err) {
+                    res.json({
+                        success: 0,
+                        message: "Invalid token"
+                    });
+                }
+                else {
+                    let [val,_] = await Post.getStartupUserInfo(decoded.result.username, decoded.result.password)
+                    // res.json({val})
+
+                    console.log(val);
+                    let [result,abc] = await Post.getStartupUpdate(val[0].startup_id)
+                    res.json(result)
+
+                }
+            })
+        } else {
+            res.json({
+                success: 0,
+                message: "access denied! Unauthorized user!"
+            })
+        }
+    } catch (error) {
+        console.log(error);
+        next(error);
+    }
+}
+
+
+
+
 exports.applicantList = async (req, res, next) => {
     try {
         let token = req.get("authorization");

@@ -233,6 +233,19 @@ class Post {
         return db.execute(sql);
     }
 
+
+
+    static getStartupUpdate(startup_id) {
+        console.log('startup_id: '+startup_id)
+        let sql = `select * from UpdateMsg where startup_id='${startup_id}';`;
+        return db.execute(sql).then(async ([res]) => {
+            console.log(res)
+            return res
+        }).catch(error => {
+            throw error;
+        })
+    }
+
     static getApplicantList(startup_id,req) {
         console.log('startup_id: '+startup_id)
         let sql = `select t1.* from Apply t1 left join Hiring_Post t2 on t1.post_id = t2.post_id where t1.post_id='${req.body.post_id}' and t2.startup_id = '${startup_id}';`;
