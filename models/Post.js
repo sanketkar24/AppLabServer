@@ -361,7 +361,7 @@ class Post {
     }
     static allServices() {
         
-        let sql = `select * from serviceHistory `;
+        let sql = `select t1.*, t2.name from serviceHistory t1 left join startup t2 on t1.startup_id=t2.startup_id `;
         //return db.execute(sql);
         return db.execute(sql);
     }
