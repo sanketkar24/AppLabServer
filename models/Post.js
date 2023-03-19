@@ -171,7 +171,12 @@ class Post {
     static insertUpdateMsg(startup_id, req) {
         let sql = `INSERT INTO UpdateMsg(startup_id,message) values(?,?);`;
         var param = [startup_id, req.body.message];
-        return db.execute(sql, param);
+        return db.execute(sql, param).then(async ([res]) => {
+            console.log(res.affectedRows)
+            return res.affectedRows>=1 ? 'success':'false'
+        }).catch(error => {
+            throw error;
+        })
     }
     static findByName(name) {
         let sql = `SELECT * FROM MovieDB

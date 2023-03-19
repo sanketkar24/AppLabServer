@@ -154,15 +154,12 @@ exports.insertUpdateMsg = async (req, res, next) => {
                     });
                 }
                 else {
-
-                    
                     let [val] = await Post.getStartupUserInfo(decoded.result.username, decoded.result.password)
-                     console.log(val)
+                    console.log(val)
                     //let result = await Post.insertServices(val[0].startup_id, req)
                     let result = await Post.insertUpdateMsg(val[0].startup_id,req)
-                    let msg = result.affectedRows>=1? 'success' : 'failed'
+                    let msg = result>=1? 'success' : 'failed'
                     res.json(msg)
-
                 }
             })
         } else {
