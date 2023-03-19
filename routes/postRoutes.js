@@ -48,8 +48,8 @@ router.route("/getStartupUpdates").get(postController.getStartupUpdates)
 router.route("/findCofounder").get(postController.findCofounder)
 
 
-//Apply to job
-
+//Admin
+router.route("/allServices").get(postController.allServices)
 
 
 // router.route("/allMovies/:name").get(postController.findMovieByName);

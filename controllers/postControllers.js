@@ -398,6 +398,17 @@ exports.getStartupUpdates = async (req, res, next) => {
 }
 
 
+exports.allServices = async (req, res, next) => {
+        try {
+            let [result,_] = await Post.allServices()
+            let msg = result.status === 'P' ? 'Pending': result.status === 'Y' ? 'Accepted' : 'Rejected'
+            result.status = msg
+            res.status(200).json( result );
+        } catch (error) {
+            console.log(error);
+            next(error);
+        }
+}
 
 
 exports.applicantList = async (req, res, next) => {

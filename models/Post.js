@@ -324,6 +324,12 @@ class Post {
         //return db.execute(sql);
         return db.execute(sql);
     }
+    static allServices() {
+        
+        let sql = `select * from serviceHistory `;
+        //return db.execute(sql);
+        return db.execute(sql);
+    }
 
 
     static registerStartup(req_obj) {
