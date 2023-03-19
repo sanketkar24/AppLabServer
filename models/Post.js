@@ -168,10 +168,9 @@ class Post {
             throw error;
         })
     }
-    static insertUpdateMsg(startup_id, message, extra_links) {
-        let extra_links_processed = extra_links.join();
-        let sql = `INSERT INTO UpdateMsg(startup_id,message,extra_links) values(?,?,?);`;
-        var param = [startup_id, message, extra_links_processed];
+    static insertUpdateMsg(startup_id, req) {
+        let sql = `INSERT INTO UpdateMsg(startup_id,message) values(?,?);`;
+        var param = [startup_id, req.body.message];
         return db.execute(sql, param);
     }
     static findByName(name) {
@@ -248,7 +247,7 @@ class Post {
 
     static getApplicantList(startup_id,req) {
         console.log('startup_id: '+startup_id)
-        let sql = `select t1.* from Apply t1 left join Hiring_Post t2 on t1.post_id = t2.post_id where t1.post_id='${req.body.post_id}' and t2.startup_id = '${startup_id}';`;
+        let sql = `select t1.*, t3.name, t3.email, t3.college from Apply t1 left join Hiring_Post t2 on t1.post_id = t2.post_id left join UserProfile t3 on t1.student_id = t3.student_id where t1.post_id='${req.body.post_id}' and t2.startup_id = '${startup_id}';`;
         return db.execute(sql);
     }
 
@@ -288,9 +287,28 @@ class Post {
         })
     }
 
+    static insertStudentServices(student_id, req) {
+        
+        let sql = `insert into serviceHistoryStudent(student_id, service_id, description) values('${student_id}',
+        '${req.body.service_id}','${req.body.description}');`;
+        //return db.execute(sql);
+        return db.execute(sql).then(async ([row]) => {
+            return row>=1 ? 'success':'false'
+        }).catch(error => {
+            throw error;
+        })
+    }
+
     static getAllServices() {
         
         let sql = `select * from service where type = 1 or type = 3`;
+        //return db.execute(sql);
+        return db.execute(sql);
+    }
+
+    static getAllStudentServices() {
+        
+        let sql = `select * from service where type = 2 or type = 3`;
         //return db.execute(sql);
         return db.execute(sql);
     }

@@ -103,17 +103,80 @@ exports.listMentors = async (req, res, next) => {
         next(error);
     }
 }
-exports.insertUpdateMsg = async (req, res, next) => {
+
+exports.insertHiring = async (req, res, next) => {
     try {
-        let obj = req.body;
-        let [val, _] = await Post.insertUpdateMsg(obj.startup_id, obj.msg, obj.extra_links);
-        let message = (val.affectedRows>=1? "success" : "false")
-        res.status(200).json({ message });
+        let token = req.get("authorization");
+        if (token) {
+            token = token.slice(7)
+            jwt.verify(token, process.env.ACCESS_KEY, async (err, decoded) => {
+                if (err) {
+                    res.json({
+                        success: 0,
+                        message: "Invalid token"
+                    });
+                }
+                else {
+
+                    
+                    let [val] = await Post.getStartupUserInfo(decoded.result.username, decoded.result.password)
+                     console.log(val)
+                    //let result = await Post.insertServices(val[0].startup_id, req)
+                    let result = await Post.insertHiring(val[0].startup_id,req)
+                    console.log(result)
+                    res.json({result})
+
+                }
+            })
+        } else {
+            res.json({
+                success: 0,
+                message: "access denied! Unauthorized user!"
+            })
+        }
     } catch (error) {
         console.log(error);
         next(error);
     }
 }
+
+
+exports.insertUpdateMsg = async (req, res, next) => {
+    try {
+        let token = req.get("authorization");
+        if (token) {
+            token = token.slice(7)
+            jwt.verify(token, process.env.ACCESS_KEY, async (err, decoded) => {
+                if (err) {
+                    res.json({
+                        success: 0,
+                        message: "Invalid token"
+                    });
+                }
+                else {
+
+                    
+                    let [val] = await Post.getStartupUserInfo(decoded.result.username, decoded.result.password)
+                     console.log(val)
+                    //let result = await Post.insertServices(val[0].startup_id, req)
+                    let result = await Post.insertUpdateMsg(val[0].startup_id,req)
+                    let msg = result.affectedRows>=1? 'success' : 'failed'
+                    res.json(msg)
+
+                }
+            })
+        } else {
+            res.json({
+                success: 0,
+                message: "access denied! Unauthorized user!"
+            })
+        }
+    } catch (error) {
+        console.log(error);
+        next(error);
+    }
+}
+
 exports.findMovieByName = async (req, res, next) => {
     try {
         let name = req.params.name;
@@ -514,6 +577,40 @@ exports.insertServices = async (req, res, next) => {
         next(error);
     }
 }
+
+
+exports.insertStudentServices = async (req, res, next) => {
+    try {
+        let token = req.get("authorization");
+        if (token) {
+            token = token.slice(7)
+            jwt.verify(token, process.env.ACCESS_KEY, async (err, decoded) => {
+                if (err) {
+                    res.json({
+                        success: 0,
+                        message: "Invalid token"
+                    });
+                }
+                else {
+                    let [val] = await Post.getUserInfo(decoded.result.username, decoded.result.password)
+                    // res.json({val})
+                    let result = await Post.insertStudentServices(val[0].startup_id, req)
+                    
+                    res.json({result})
+
+                }
+            })
+        } else {
+            res.json({
+                success: 0,
+                message: "access denied! Unauthorized user!"
+            })
+        }
+    } catch (error) {
+        console.log(error);
+        next(error);
+    }
+}
 exports.insertHiring = async (req, res, next) => {
     try {
         let token = req.get("authorization");
@@ -553,6 +650,16 @@ exports.insertHiring = async (req, res, next) => {
 exports.getAllServices = async (req, res, next) => {
     try {
         let [result,_] = await Post.getAllServices()
+        res.status(200).json({ result });
+    } catch (error) {
+        console.log(error);
+        next(error);
+    }
+}
+
+exports.getAllStudentServices = async (req, res, next) => {
+    try {
+        let [result,_] = await Post.getAllStudentServices()
         res.status(200).json({ result });
     } catch (error) {
         console.log(error);

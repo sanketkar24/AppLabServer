@@ -20,7 +20,10 @@ router.route("/startupDetails").get(postController.getStartup);
 //Services
 router.route("/getPastServices").get(postController.getPastServices);
 router.route("/insertServices").post(postController.insertServices);
+router.route("/insertStudentServices").post(postController.insertStudentServices);
+
 router.route("/getAllServices").get(postController.getAllServices);
+router.route("/getAllStudentServices").get(postController.getAllStudentServices);
 
 //Hiring
 router.route("/insertHiringMessage").post(postController.insertHiring);
@@ -39,7 +42,6 @@ router.route("/listMentors").get(postController.listMentors)
 
 //update
 router.route("/insertUpdateMsg").get(postController.insertUpdateMsg)
-
 router.route("/getStartupUpdates").get(postController.getStartupUpdates)
 
 //Cofounder
