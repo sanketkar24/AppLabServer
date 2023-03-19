@@ -93,7 +93,17 @@ exports.findStartupByID = async (req, res, next) => {
 exports.allStartups = async (req, res, next) => {
     try {
         let [val,_] = await Post.allStartups();
-        res.status(200).json({ val });
+        res.status(200).json(val);
+    } catch (error) {
+        console.log(error);
+        next(error);
+    }
+}
+
+exports.allStudents = async (req, res, next) => {
+    try {
+        let [val,_] = await Post.allStudents();
+        res.status(200).json( val );
     } catch (error) {
         console.log(error);
         next(error);

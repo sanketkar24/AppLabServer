@@ -138,6 +138,11 @@ class Post {
         return db.execute(sql);
     }
 
+    static allStudents() {
+        let sql = `select * from UserProfile where username != 'admin'`;
+        return db.execute(sql);
+    }
+
     static findCofounder(student_id) {
         let sql = `select * from UserProfile where interested_in = 1 and student_id != '${student_id}';`;
         return db.execute(sql);

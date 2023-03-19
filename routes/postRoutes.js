@@ -54,8 +54,9 @@ router.route("/allStudentServices").get(postController.allStudentServices)
 router.route("/serviceStartupResponse").post(postController.serviceResponse)
 router.route("/serviceStudentResponse").post(postController.serviceStudentResponse)
 
-
-// router.route("/allMovies/:name").get(postController.findMovieByName);
+//all startup
+router.route("/allStartups").get(postController.allStartups);
+router.route("/allStudents").get(postController.allStudents);
 // router.route("/getReview/:id").get(postController.getReview);
 
 
