@@ -90,7 +90,15 @@ exports.findStartupByID = async (req, res, next) => {
     }
 }
 
-
+exports.allStartups = async (req, res, next) => {
+    try {
+        let [val,_] = await Post.allStartups();
+        res.status(200).json({ val });
+    } catch (error) {
+        console.log(error);
+        next(error);
+    }
+}
 
 exports.listMentors = async (req, res, next) => {
     try {
@@ -158,6 +166,67 @@ exports.insertUpdateMsg = async (req, res, next) => {
                     console.log(val)
                     //let result = await Post.insertServices(val[0].startup_id, req)
                     let result = await Post.insertUpdateMsg(val[0].startup_id,req)
+                    let msg = result>=1? 'success' : 'failed'
+                    res.json(msg)
+                }
+            })
+        } else {
+            res.json({
+                success: 0,
+                message: "access denied! Unauthorized user!"
+            })
+        }
+    } catch (error) {
+        console.log(error);
+        next(error);
+    }
+}
+exports.serviceResponse = async (req, res, next) => {
+    try {
+        let token = req.get("authorization");
+        if (token) {
+            token = token.slice(7)
+            jwt.verify(token, process.env.ACCESS_KEY, async (err, decoded) => {
+                if (err) {
+                    res.json({
+                        success: 0,
+                        message: "Invalid token"
+                    });
+                }
+                else {
+                    
+                    let result = await Post.serviceResponse(req)
+                    let msg = result>=1? 'success' : 'failed'
+                    res.json(msg)
+                }
+            })
+        } else {
+            res.json({
+                success: 0,
+                message: "access denied! Unauthorized user!"
+            })
+        }
+    } catch (error) {
+        console.log(error);
+        next(error);
+    }
+}
+
+exports.serviceStudentResponse = async (req, res, next) => {
+    try {
+        let token = req.get("authorization");
+        if (token) {
+            token = token.slice(7)
+            jwt.verify(token, process.env.ACCESS_KEY, async (err, decoded) => {
+                if (err) {
+                    res.json({
+                        success: 0,
+                        message: "Invalid token"
+                    });
+                }
+                else {
+                    
+                    let result = await Post.serviceStudentResponse(req)
                     let msg = result>=1? 'success' : 'failed'
                     res.json(msg)
                 }
@@ -408,6 +477,17 @@ exports.allServices = async (req, res, next) => {
             console.log(error);
             next(error);
         }
+}
+exports.allStudentServices = async (req, res, next) => {
+    try {
+        let [result,_] = await Post.allStudentServices()
+        let msg = result.status === 'P' ? 'Pending': result.status === 'Y' ? 'Accepted' : 'Rejected'
+        result.status = msg
+        res.status(200).json( result );
+    } catch (error) {
+        console.log(error);
+        next(error);
+    }
 }
 
 

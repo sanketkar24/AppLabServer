@@ -49,7 +49,10 @@ router.route("/findCofounder").get(postController.findCofounder)
 
 
 //Admin
-router.route("/allServices").get(postController.allServices)
+router.route("/allStartupServices").get(postController.allServices)
+router.route("/allStudentServices").get(postController.allStudentServices)
+router.route("/serviceStartupResponse").post(postController.serviceResponse)
+router.route("/serviceStudentResponse").post(postController.serviceStudentResponse)
 
 
 // router.route("/allMovies/:name").get(postController.findMovieByName);

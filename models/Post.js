@@ -133,6 +133,11 @@ class Post {
         return db.execute(sql);
     }
 
+    static allStartups() {
+        let sql = `select * from startup where username != 'admin'`;
+        return db.execute(sql);
+    }
+
     static findCofounder(student_id) {
         let sql = `select * from UserProfile where interested_in = 1 and student_id != '${student_id}';`;
         return db.execute(sql);
@@ -178,6 +183,31 @@ class Post {
             throw error;
         })
     }
+
+    static serviceResponse(req) {
+        let choice = req.body.status
+        let status = choice==='Approved'?'Y':'N'
+        let sql = `update serviceHistory set status = '${status}' where request_id = '${req.body.post_id}';`;
+        return db.execute(sql).then(async ([res]) => {
+            console.log(res.affectedRows)
+            return res.affectedRows>=1 ? 'success':'false'
+        }).catch(error => {
+            throw error;
+        })
+    }
+
+    static serviceStudentResponse(req) {
+        let choice = req.body.status
+        let status = choice==='Approved'?'Y':'N'
+        let sql = `update serviceHistoryStudent set status = '${status}' where id = '${req.body.post_id}';`;
+        return db.execute(sql).then(async ([res]) => {
+            console.log(res.affectedRows)
+            return res.affectedRows>=1 ? 'success':'false'
+        }).catch(error => {
+            throw error;
+        })
+    }
+
     static findByName(name) {
         let sql = `SELECT * FROM MovieDB
              where LOWER(original_title) LIKE LOWER('%${name}%');`;
@@ -327,6 +357,12 @@ class Post {
     static allServices() {
         
         let sql = `select * from serviceHistory `;
+        //return db.execute(sql);
+        return db.execute(sql);
+    }
+    static allStudentServices() {
+        
+        let sql = `select * from serviceHistoryStudent `;
         //return db.execute(sql);
         return db.execute(sql);
     }
