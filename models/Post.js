@@ -367,7 +367,7 @@ class Post {
     }
     static allStudentServices() {
         
-        let sql = `select * from serviceHistoryStudent `;
+        let sql = `select t1.*,t2.name from serviceHistoryStudent t1 left join UserProfile t2 on t1.student_id = t2.student_id`;
         //return db.execute(sql);
         return db.execute(sql);
     }
